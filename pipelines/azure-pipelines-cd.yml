@@ -1,0 +1,48 @@
+# CD — defined only; not executed for assessment submission
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - name: azureServiceConnection
+    value: sc-meridian-payments-oidc # federated workload identity — no stored secret
+
+stages:
+  - stage: Dev
+    jobs:
+      - deployment: InfraDev
+        environment: payments-dev
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo "terraform apply -var-file=environments/dev.tfvars (requires service connection)"
+                  displayName: Infrastructure dev (disabled)
+
+  - stage: Test
+    dependsOn: Dev
+    jobs:
+      - deployment: Test
+        environment: payments-test
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo "Deploy container images + smoke tests"
+                  displayName: Test deployment (defined)
+
+  - stage: Prod
+    dependsOn: Test
+    jobs:
+      - deployment: Prod
+        environment: payments-prod
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - script: echo "Manual approval + blue/green ACA revision"
+                  displayName: Prod deployment (defined)

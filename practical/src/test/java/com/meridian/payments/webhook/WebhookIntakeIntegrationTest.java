@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.meridian.payments.SupportFiles;
+import com.meridian.payments.core.CanonicalStatus;
 import com.meridian.payments.infrastructure.LoggingCanonicalEventPublisher;
 
 @SpringBootTest
@@ -60,7 +61,62 @@ class WebhookIntakeIntegrationTest {
         assertThat(publisher.getPublished()).hasSize(1);
     }
 
-  @Test
+    @Test
+    void quetzalChargeFailedMapsToFailedStatus() throws Exception {
+        byte[] body = SupportFiles.referenceSample("quetzal-mx", "samples", "02-charge-failed.json");
+        String header = "t=1795889403,v1=d793d3da0a8d4d66e984ada3daa8b9f473a0eef153d99cdd83bb70f60f13ccc9";
+
+        mockMvc.perform(post("/webhooks/quetzal")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Quetzal-Signature", header)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        assertThat(publisher.getPublished()).hasSize(1);
+        assertThat(publisher.getPublished().get(0).payment().status()).isEqualTo(CanonicalStatus.Failed);
+        assertThat(publisher.getPublished().get(0).payment().paymentKey()).isEqualTo("QZ-ch_8Jm3Np0RqA");
+    }
+
+    @Test
+    void quetzalChargeRefundedMapsToRefundedStatus() throws Exception {
+        byte[] body = SupportFiles.referenceSample("quetzal-mx", "samples", "03-charge-refunded.json");
+        String header = "t=1795975203,v1=a61f9d88d861cd4cc63359b5ca6e6d11d55369db7079387dee9a5024ccb2cae6";
+
+        mockMvc.perform(post("/webhooks/quetzal")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Quetzal-Signature", header)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        assertThat(publisher.getPublished()).hasSize(1);
+        assertThat(publisher.getPublished().get(0).payment().status()).isEqualTo(CanonicalStatus.Refunded);
+    }
+
+    @Test
+    void andinaCapturedThenReversaPublishesBothStates() throws Exception {
+        byte[] approved = SupportFiles.referenceSample("andina-co", "samples", "02-transaccion-aprobada.json");
+        byte[] reversa = SupportFiles.referenceSample("andina-co", "samples", "04-transaccion-reversada.json");
+
+        postAndina(approved, "2026-11-28T14:03:11-05:00", "MFQjfviySi6CjqbWtQcy5spKtXxHIxAvmg5W3PTzPJk=");
+        postAndina(reversa, "2026-12-03T09:15:42-05:00", "AfGO+MEffk0AWIEEE3cgyff4hWewoOaDhygCWxs/fNI=");
+
+        assertThat(publisher.getPublished()).hasSize(2);
+        assertThat(publisher.getPublished().get(0).payment().status()).isEqualTo(CanonicalStatus.Captured);
+        assertThat(publisher.getPublished().get(1).payment().status()).isEqualTo(CanonicalStatus.Refunded);
+        assertThat(publisher.getPublished().get(0).payment().paymentKey())
+                .isEqualTo(publisher.getPublished().get(1).payment().paymentKey());
+    }
+
+    @Test
+    void andinaPendienteMapsToPending() throws Exception {
+        byte[] body = SupportFiles.referenceSample("andina-co", "samples", "01-transaccion-pendiente.json");
+        postAndina(body, "2026-11-28T14:02:59-05:00", "JhaBZfk7eQsoMbbQbThmAx/bCyehBOzKYw8XTP2a40k=");
+
+        assertThat(publisher.getPublished()).hasSize(1);
+        assertThat(publisher.getPublished().get(0).payment().status()).isEqualTo(CanonicalStatus.Pending);
+    }
+
+    @Test
     void invalidQuetzalSignatureIsRejected() throws Exception {
         byte[] body = SupportFiles.referenceSample("quetzal-mx", "samples", "01-charge-succeeded.json");
         mockMvc.perform(post("/webhooks/quetzal")

@@ -1,0 +1,23 @@
+{
+  "metadata": {
+    "schemaVersion": "1.0.0",
+    "eventId": "f3a2b1c0-1111-4222-8333-444455556666",
+    "correlationId": "a1b2c3d4-5555-4666-8777-888899990000",
+    "country": "MX",
+    "provider": "Quetzal",
+    "acceptedAt": "2026-11-28T19:00:03Z"
+  },
+  "payment": {
+    "paymentKey": "QZ-ch_7Hk2Lm9QpZ",
+    "policyNumber": "POL-MX-000412785",
+    "providerTransactionId": "ch_7Hk2Lm9QpZ",
+    "providerEventId": "evt_01JDQ3K8M2X7",
+    "amount": {
+      "value": "1250.00",
+      "currency": "MXN"
+    },
+    "status": "Captured",
+    "statusChangedAt": "2026-11-28T18:59:56Z",
+    "paymentMethod": "card"
+  }
+}

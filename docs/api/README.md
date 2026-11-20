@@ -24,3 +24,5 @@
 # From repo root (requires Node npx or schema tooling of your choice)
 npx --yes ajv-cli validate -s docs/api/events/premium-payment.schema.json -d practical/src/test/resources/canonical/sample-captured.json
 ```
+
+Golden fixture: `practical/src/test/resources/canonical/sample-captured.json`.

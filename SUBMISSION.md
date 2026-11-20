@@ -4,21 +4,21 @@
 
 | Field | Value |
 |---|---|
-| Candidate ID (provided by your recruiter) | *(add your email before send)* |
-| Final commit SHA | *(run `git rev-parse HEAD` before send)* |
-| Date and time of submission (with time zone) | |
+| Candidate ID (provided by your recruiter) | manuelavillap.98@gmail.com |
+| Final commit SHA | `7ad8be084c227f877400700b2761eefd4a7724d9` |
+| Date and time of submission (with time zone) | *(update when you email the recruiter — must match the commit above)* |
 
 ## Time spent
 
 | Part | Approximate time |
 |---|---|
 | A. Integration and data design | ~2 h |
-| B. Integration component | ~2 h |
-| C. Azure IaC and CI/CD | ~1 h |
-| D. Operations | ~0.75 h |
-| E. Code review | ~0.75 h |
-| F. Responsible AI | ~0.5 h |
-| **Total** | ~7 h |
+| B. Integration component | ~2 h 30 min |
+| C. Azure IaC and CI/CD | ~1 h 15 min |
+| D. Operations | ~1 h |
+| E. Code review | ~1 h |
+| F. Responsible AI | ~55 min |
+| **Total** | **~8 h 40 min** |
 
 ## Stack
 

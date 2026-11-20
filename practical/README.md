@@ -29,6 +29,22 @@ mvn -q test
 
 Integration tests load JSON samples from `../reference/providers/` and official signature vectors from each `WEBHOOK_SPEC.md`.
 
+### Test layout
+
+```text
+practical/src/test/java/com/meridian/payments/
+  quetzal/QuetzalSignatureVerifierTest.java     # HMAC test vectors (MX)
+  quetzal/QuetzalWebhookMapperTest.java         # amount + status mapping
+  andina/AndinaSignatureVerifierTest.java       # HMAC test vectors (CO)
+  core/InMemoryNotificationTrackerTest.java     # FR5 ordering rules
+  webhook/WebhookIntakeIntegrationTest.java     # end-to-end intake + idempotency
+practical/src/test/resources/
+  application-test.yml                          # widened clock tolerances for sample timestamps
+  canonical/sample-captured.json                # JSON Schema golden file
+```
+
+Run all tests: `mvn test` from this directory.
+
 ## What is stubbed
 
 | Dependency | Production target | Local / test |

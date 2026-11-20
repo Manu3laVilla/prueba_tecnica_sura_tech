@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://meridian-mutual.example/schemas/premium-payment/1.0.0",
+  "title": "PremiumPaymentCanonicalEvent",
+  "type": "object",
+  "required": ["metadata", "payment"],
+  "additionalProperties": false,
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "required": [
+        "schemaVersion",
+        "eventId",
+        "correlationId",
+        "country",
+        "provider",
+        "acceptedAt"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version of this schema"
+        },
+        "eventId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "correlationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "country": {
+          "type": "string",
+          "enum": ["MX", "CO", "CL"]
+        },
+        "provider": {
+          "type": "string",
+          "enum": ["Quetzal", "Andina", "Austral"]
+        },
+        "acceptedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "payment": {
+      "type": "object",
+      "required": [
+        "paymentKey",
+        "policyNumber",
+        "providerTransactionId",
+        "providerEventId",
+        "amount",
+        "status",
+        "statusChangedAt",
+        "paymentMethod"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "paymentKey": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "policyNumber": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "providerTransactionId": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "providerEventId": {
+          "type": "string",
+          "maxLength": 80
+        },
+        "amount": {
+          "type": "object",
+          "required": ["value", "currency"],
+          "additionalProperties": false,
+          "properties": {
+            "value": {
+              "type": "string",
+              "pattern": "^\\d+(\\.\\d{1,2})?$"
+            },
+            "currency": {
+              "type": "string",
+              "enum": ["MXN", "COP", "CLP"]
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "Captured", "Failed", "Refunded"]
+        },
+        "statusChangedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "maxLength": 64
+        }
+      }
+    }
+  }
+}

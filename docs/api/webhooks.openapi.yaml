@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info:
+  title: Meridian Premium Payment Webhooks
+  version: 1.0.0
+  description: |
+  Webhook endpoints exposed through API Management for payment providers.
+  Paths mirror the intake application; APIM may add policies (rate limit, IP allow list).
+
+servers:
+  - url: https://api.meridian-mutual.example/payments/v1
+    description: API Management façade
+
+paths:
+  /webhooks/quetzal:
+    post:
+      operationId: receiveQuetzalWebhook
+      summary: Quetzal Pagos (Mexico) payment events
+      tags: [Mexico]
+      parameters:
+        - in: header
+          name: Quetzal-Signature
+          required: true
+          schema:
+            type: string
+          description: "t=<unix>,v1=<hmac-sha256-hex>"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Quetzal event payload (see provider spec 2025-06-01)
+      responses:
+        '200':
+          description: Accepted
+        '401':
+          description: Invalid or expired signature
+        '500':
+          description: Temporary failure; provider will retry
+
+  /webhooks/andina:
+    post:
+      operationId: receiveAndinaWebhook
+      summary: Andina Pay (Colombia) transaction notifications
+      tags: [Colombia]
+      parameters:
+        - in: header
+          name: X-Andina-Timestamp
+          required: true
+          schema:
+            type: string
+        - in: header
+          name: X-Andina-Signature
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Accepted
+        '204':
+          description: Accepted (no content)
+        '401':
+          description: Invalid signature or timestamp
+        '500':
+          description: Temporary failure; provider will retry
+
+  /webhooks/austral:
+    post:
+      operationId: receiveAustralWebhook
+      summary: Austral Pagos (Chile) — design only; implemented in follow-up
+      tags: [Chile]
+      x-implementation: not-in-part-b
+      parameters:
+        - in: header
+          name: X-Austral-Signature
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200':
+          description: Accepted

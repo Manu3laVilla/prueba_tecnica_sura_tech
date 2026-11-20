@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: payments-intake
+
+meridian:
+  webhooks:
+    quetzal-secret: ${QUETZAL_WEBHOOK_SECRET:qz_test_whsec_4f8a1c2e9b7d}
+    andina-secret: ${ANDINA_WEBHOOK_SECRET:andina_test_secret_7c3e19ab}
+    quetzal-timestamp-tolerance-seconds: 300
+    andina-timestamp-tolerance-minutes: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

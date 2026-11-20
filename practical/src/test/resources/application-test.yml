@@ -1,0 +1,6 @@
+meridian:
+  webhooks:
+    quetzal-secret: qz_test_whsec_4f8a1c2e9b7d
+    andina-secret: andina_test_secret_7c3e19ab
+    quetzal-timestamp-tolerance-seconds: 2000000000
+    andina-timestamp-tolerance-minutes: 525600

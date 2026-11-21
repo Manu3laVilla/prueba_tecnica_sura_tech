@@ -5,7 +5,7 @@
 | Field | Value |
 |---|---|
 | Candidate ID (provided by your recruiter) | manuelavillap.98@gmail.com |
-| Final commit SHA | `b562b7a07bde9d4cfbc5402bf77ced252bc77dcb` |
+| Final commit SHA | `8ddfce85e8f587bc601a7ecf1a50902f30a64677` |
 | Date and time of submission (with time zone) | 2026-11-20 19:00 UTC-5 |
 
 ## Time spent
